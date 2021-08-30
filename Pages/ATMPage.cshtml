@@ -1,0 +1,182 @@
+﻿@page
+@model ATMPageModel
+@{
+
+}
+
+<section id="atm">
+	<div class="row" style="height: 50px; width: 100%">
+		<div class="row">
+			<div class="circle">
+				<i class="ri-arrow-left-line" style=""></i>
+			</div>
+			<a asp-page="Index" style="height: 40px; color: #fff; padding: 8px">Cancelar</a>
+		</div>
+	</div>
+	<form class="col form" method="POST" style=" ustify-content: center; align-items: center; width: 100%; margin-top: 50px; ">
+			@if(@Model.hasError)
+			{
+					<script>
+						alert("Se ha producido un error favor revisar el monto limite.");
+					</script>
+			}
+			@if(@Model.usedThousands > 0 || @Model.usedFiveHundreds > 0 || @Model.usedHundreds > 0)
+			{
+				<script>
+					alert('miles usados: @Model.usedThousands,  quinientos usados: @Model.usedFiveHundreds, cien usados: @Model.usedHundreds')
+				</script>
+			}
+		<input style="color: #fff; text-align: center; background:transparent; outline:none;border:none;" readonly name="amount" id="amount" value="">
+		<div id="btn-container" style="margin: auto;" class="grid">
+			@for (int i = 1; i < 10; i++)
+			{
+				<div>@i</div>
+			}
+			<div style="opacity: 0"></div>
+			<div>0</div>
+			<div data-intent="delete">X</div>
+		</div>
+		<label class="label" for="bankName" style="color:#fff;">Ingrese el nombre de su banco</label>
+		<input name="bankName" type="text" class="input is-success" style="width:200px;"/>
+		<div class="row center">
+			<button class="btn" type="submit" style="margin-top: 20px">
+				<span>Ingresar</span>
+			</button>
+		</div>
+	</form>
+</section>
+
+@section scripts {
+	
+<script>
+	document.querySelector("#btn-container").childNodes &&
+		document.querySelector("#btn-container").childNodes.forEach((node) => {
+			node.addEventListener("click", (e) => {
+				let n = e.target.innerHTML;
+				if (n == "X") {
+					let val = document.getElementById("amount").value;
+					console.log(val)
+					let a = document
+						.getElementById("amount")
+						.value
+						.split("")
+						.splice(0, val.length - 1)
+						.join("");
+					console.log(a)
+
+					document.getElementById("amount").value = a;
+				} else {
+					if (document.getElementById("amount").value == 0) {
+						document.getElementById("amount").value = `${n}`;
+					} else {
+						document.getElementById("amount").value += `${n}`;
+					}
+				}
+			});
+		});
+
+
+</script>
+}
+
+<style>
+	i {
+		font-size: 1.5rem;
+	}
+
+	section {
+		height: 100vh;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		padding-left: 20px;
+		padding-top: 10px;
+		padding-right: 20px;
+		background: linear-gradient(145deg,
+				rgba(112, 32, 244, 1) 7%,
+				rgba(144, 69, 210, 1) 24%,
+				rgba(204, 139, 148, 1) 55%,
+				rgba(248, 191, 106, 1) 82%);
+	}
+
+	.col {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.center {
+		align-items: center;
+		justify-content: center;
+	}
+
+	.circle {
+		border-radius: 50%;
+		background-color: #fff;
+		height: 40px;
+		width: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.circle>i {
+		color: rgba(112, 32, 244, 1);
+	}
+
+	.grid {
+		margin-left: auto;
+		margin-right: auto;
+		display: grid;
+		grid-gap: 1px;
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.grid>div {
+		padding: 10px;
+		height: 50px;
+		width: 50px;
+		cursor: pointer;
+		font-size: 2rem;
+		font-weight: 700;
+		color: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		user-select: none;
+	}
+
+	.btn {
+		height: 40px;
+		width: 100px;
+		outline: none;
+		border: none;
+		border-radius: 36px;
+		background-color: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+		transition: box-shadow 200ms ease-in-out;
+		color: rgba(112, 32, 244, 1);
+		font-size: 1rem;
+		font-weight: 500;
+	}
+
+	.btn:hover {
+		box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.3);
+		cursor: pointer;
+	}
+
+	.btn>span {
+		transition: all 200ms ease-out;
+	}
+
+	.btn:hover>span {
+		transform: scale(0.9);
+	}
+</style>
